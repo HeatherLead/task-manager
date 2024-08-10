@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Difficulty {
+  high
+  low
+}
+
+enum Progress {
+  active
+  inProcess
+  completed
+  expired
+}
+
+model Note {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  difficulty  Difficulty
+  progress    Progress
+  deadline    DateTime
+}
