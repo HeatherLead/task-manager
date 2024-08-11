@@ -8,8 +8,8 @@ datasource db {
 }
 
 enum Difficulty {
-  high
   low
+  high
 }
 
 enum Progress {
