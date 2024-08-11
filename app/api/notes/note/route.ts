@@ -81,14 +81,10 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "No fields to update" }, { status: 400 });
     }
 
-    console.log('Update data:', updateData);
-
     const note = await prisma.note.update({
       where: { id },
       data: updateData,
     });
-
-    console.log('Updated note:', note);
 
     if (!note) {
       return NextResponse.json({ error: "Note not found" }, { status: 404 });

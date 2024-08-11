@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Plus, Clock, BriefcaseBusiness } from "lucide-react";
@@ -28,14 +28,16 @@ import axios from "axios";
 import { Box, Flex } from "@radix-ui/themes";
 import { Label } from "@/components/ui/label";
 import { Difficulty, Note, Progress } from "./page";
-type formDetail = {
+
+type FormDetail = {
   title: string;
   description: string;
   deadline?: Date;
   difficulty: Difficulty;
 };
+
 const Sidebar = () => {
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [expiredNumber, setExpiredNumber] = useState(0);
   const [completedNumber, setCompletedNumber] = useState(0);
   const [activeNumber, setActiveNumber] = useState(0);
@@ -45,37 +47,44 @@ const Sidebar = () => {
     formState: { errors, isLoading },
     control,
     setValue,
-  } = useForm<formDetail>({
+  } = useForm<FormDetail>({
     defaultValues: {
       difficulty: Difficulty.low,
     },
   });
 
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.get("/api/notes");
-      const data: Note[] = response.data;
-      if (data) {
-        const active = data.filter(
-          (value) => value.progress === Progress.active || Progress.inProcess
-        );
-        const completed = data.filter(
-          (value) => value.progress === Progress.completed
-        );
-        const expired = data.filter(
-          (value) => value.progress === Progress.expired
-        );
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get("/api/notes");
+        const data: Note[] = response.data;
+        if (data) {
+          const active = data.filter(
+            (value) =>
+              value.progress === Progress.active ||
+              value.progress === Progress.inProcess
+          );
+          const completed = data.filter(
+            (value) => value.progress === Progress.completed
+          );
+          const expired = data.filter(
+            (value) => value.progress === Progress.expired
+          );
 
-        setActiveNumber(active.length);
-        setCompletedNumber(completed.length);
-        setExpiredNumber(expired.length);
+          setActiveNumber(active.length);
+          setCompletedNumber(completed.length);
+          setExpiredNumber(expired.length);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
       }
-    } catch (error) {}
-  };
-  fetchTasks();
-  const onSubmit: SubmitHandler<formDetail> = async (data) => {
+    };
+    fetchTasks();
+  }, []);
+
+  const onSubmit: SubmitHandler<FormDetail> = async (data) => {
     try {
-      const response = await axios.post("/api/notes/note", data);
+      await axios.post("/api/notes/note", data);
     } catch (error) {
       console.error("Error creating note:", error);
     } finally {

@@ -1,3 +1,4 @@
+"use client";
 import { Badge } from "@radix-ui/themes";
 import React from "react";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
@@ -54,10 +55,9 @@ interface NoteProps {
   deadline: Date;
   difficulty: Difficulty;
   progress: Progress;
-  onDelete: (id: string) => void;
 }
 
-type formDetail = {
+type FormDetail = {
   title: string;
   description: string;
   deadline?: Date;
@@ -72,7 +72,6 @@ const Note = ({
   description,
   difficulty,
   progress,
-  onDelete,
 }: NoteProps) => {
   const date = new Date(deadline);
 
@@ -83,7 +82,6 @@ const Note = ({
       });
       if (response.status === 200) {
         console.log("Note deleted successfully");
-        onDelete(id);
       }
     } catch (error) {
       console.error("Error deleting note:", error);
@@ -97,13 +95,13 @@ const Note = ({
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<formDetail>({
+  } = useForm<FormDetail>({
     defaultValues: {
       difficulty: Difficulty.low,
     },
   });
 
-  const onSubmit: SubmitHandler<formDetail> = async (data) => {
+  const onSubmit: SubmitHandler<FormDetail> = async (data) => {
     try {
       const response = await axios.patch("/api/notes/note", {
         data,
@@ -142,7 +140,7 @@ const Note = ({
                       Do you want to delete the note?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will delete the note. This action can't be reverted.
+                      This will delete the note. This action cant be reverted.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

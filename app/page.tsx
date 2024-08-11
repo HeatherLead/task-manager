@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
 export enum Progress {
   active = "active",
   inProcess = "inProcess",
@@ -58,10 +59,6 @@ export default function Home() {
     }
   }, [notes]);
 
-  const deleteNote = (id: string) => {
-    setNotes((prevNotes) => prevNotes!.filter((note) => note.id !== id));
-  };
-
   return (
     <div className="w-screen h-screen overflow-hidden p-4">
       <Navbar />
@@ -87,9 +84,6 @@ export default function Home() {
                   deadline={note.deadline}
                   difficulty={note.difficulty}
                   progress={note.progress}
-                  onDelete={() => {
-                    deleteNote;
-                  }}
                 />
               ))}
           </ScrollArea>
@@ -114,9 +108,6 @@ export default function Home() {
                   deadline={note.deadline}
                   difficulty={note.difficulty}
                   progress={note.progress}
-                  onDelete={() => {
-                    deleteNote;
-                  }}
                 />
               ))}
           </ScrollArea>
@@ -141,9 +132,6 @@ export default function Home() {
                   deadline={note.deadline}
                   difficulty={note.difficulty}
                   progress={note.progress}
-                  onDelete={() => {
-                    deleteNote;
-                  }}
                 />
               ))}
           </ScrollArea>
@@ -151,4 +139,8 @@ export default function Home() {
       </div>
     </div>
   );
+}
+
+function someFunctionThatCausesError() {
+  throw new Error("Function not implemented.");
 }
