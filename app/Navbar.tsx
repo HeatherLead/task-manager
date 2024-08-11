@@ -21,7 +21,7 @@ const Navbar = () => {
             Filter
           </Button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
+        {/* <DropdownMenu.Content>
           <DropdownMenu.Item shortcut="⌘ E">Edit</DropdownMenu.Item>
           <DropdownMenu.Item shortcut="⌘ D">Duplicate</DropdownMenu.Item>
           <DropdownMenu.Separator />
@@ -45,7 +45,7 @@ const Navbar = () => {
           <DropdownMenu.Item shortcut="⌘ ⌫" color="red">
             Delete
           </DropdownMenu.Item>
-        </DropdownMenu.Content>
+        </DropdownMenu.Content> */}
       </DropdownMenu.Root>
     </div>
   );
