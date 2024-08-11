@@ -4,7 +4,7 @@ import Note from "./(components)/Note";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
 export enum Progress {
   active = "active",
   inProcess = "inProcess",
@@ -17,7 +17,7 @@ export enum Difficulty {
   high = "high",
 }
 
-interface Note {
+export interface Note {
   id: string;
   title: string;
   description: string;
@@ -58,6 +58,10 @@ export default function Home() {
     }
   }, [notes]);
 
+  const deleteNote = (id: string) => {
+    setNotes((prevNotes) => prevNotes!.filter((note) => note.id !== id));
+  };
+
   return (
     <div className="w-screen h-screen overflow-hidden p-4">
       <Navbar />
@@ -72,19 +76,23 @@ export default function Home() {
             </div>
           </div>
           <hr className="h-1 rounded-full mb-2" color="#5030E5" />
-
-          {activeNotes &&
-            activeNotes.map((note) => (
-              <Note
-                key={note.id}
-                id={note.id}
-                title={note.title}
-                description={note.description}
-                deadline={note.deadline}
-                difficulty={note.difficulty}
-                progress={note.progress}
-              />
-            ))}
+          <ScrollArea>
+            {activeNotes &&
+              activeNotes.map((note) => (
+                <Note
+                  key={note.id}
+                  id={note.id}
+                  title={note.title}
+                  description={note.description}
+                  deadline={note.deadline}
+                  difficulty={note.difficulty}
+                  progress={note.progress}
+                  onDelete={() => {
+                    deleteNote;
+                  }}
+                />
+              ))}
+          </ScrollArea>
         </div>
         <div className="w-1/4 bg-contBackground rounded-xl shadow-md p-4 flex flex-col gap-2">
           <div className="flex justify-center items-center gap-3">
@@ -95,19 +103,23 @@ export default function Home() {
             </div>
           </div>
           <hr className="h-1 rounded-full mb-2" color="#FFA500" />
-
-          {inProcessNotes &&
-            inProcessNotes.map((note) => (
-              <Note
-                key={note.id}
-                id={note.id}
-                title={note.title}
-                description={note.description}
-                deadline={note.deadline}
-                difficulty={note.difficulty}
-                progress={note.progress}
-              />
-            ))}
+          <ScrollArea>
+            {inProcessNotes &&
+              inProcessNotes.map((note) => (
+                <Note
+                  key={note.id}
+                  id={note.id}
+                  title={note.title}
+                  description={note.description}
+                  deadline={note.deadline}
+                  difficulty={note.difficulty}
+                  progress={note.progress}
+                  onDelete={() => {
+                    deleteNote;
+                  }}
+                />
+              ))}
+          </ScrollArea>
         </div>
         <div className="w-1/4 bg-contBackground rounded-xl shadow-md p-4 flex flex-col gap-2">
           <div className="flex justify-center items-center gap-3">
@@ -118,19 +130,23 @@ export default function Home() {
             </div>
           </div>
           <hr className="h-1 rounded-full mb-2" color="#8BC48A" />
-
-          {completedNotes &&
-            completedNotes.map((note) => (
-              <Note
-                key={note.id}
-                id={note.id}
-                title={note.title}
-                description={note.description}
-                deadline={note.deadline}
-                difficulty={note.difficulty}
-                progress={note.progress}
-              />
-            ))}
+          <ScrollArea>
+            {completedNotes &&
+              completedNotes.map((note) => (
+                <Note
+                  key={note.id}
+                  id={note.id}
+                  title={note.title}
+                  description={note.description}
+                  deadline={note.deadline}
+                  difficulty={note.difficulty}
+                  progress={note.progress}
+                  onDelete={() => {
+                    deleteNote;
+                  }}
+                />
+              ))}
+          </ScrollArea>
         </div>
       </div>
     </div>

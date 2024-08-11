@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Box, Flex } from "@radix-ui/themes";
 import { Label } from "@/components/ui/label";
-import { Difficulty } from "./page";
+import { Difficulty, Note, Progress } from "./page";
 type formDetail = {
   title: string;
   description: string;
@@ -36,6 +36,9 @@ type formDetail = {
 };
 const Sidebar = () => {
   const [date, setDate] = useState<Date>();
+  const [expiredNumber, setExpiredNumber] = useState(0);
+  const [completedNumber, setCompletedNumber] = useState(0);
+  const [activeNumber, setActiveNumber] = useState(0);
   const {
     register,
     handleSubmit,
@@ -48,13 +51,35 @@ const Sidebar = () => {
     },
   });
 
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get("/api/notes");
+      const data: Note[] = response.data;
+      if (data) {
+        const active = data.filter(
+          (value) => value.progress === Progress.active || Progress.inProcess
+        );
+        const completed = data.filter(
+          (value) => value.progress === Progress.completed
+        );
+        const expired = data.filter(
+          (value) => value.progress === Progress.expired
+        );
+
+        setActiveNumber(active.length);
+        setCompletedNumber(completed.length);
+        setExpiredNumber(expired.length);
+      }
+    } catch (error) {}
+  };
+  fetchTasks();
   const onSubmit: SubmitHandler<formDetail> = async (data) => {
     try {
-      console.log(data);
       const response = await axios.post("/api/notes/note", data);
-      console.log("Note created successfully:", response.data);
     } catch (error) {
       console.error("Error creating note:", error);
+    } finally {
+      window.location.reload();
     }
   };
 
@@ -65,21 +90,21 @@ const Sidebar = () => {
           <FcExpired />
         </div>
         <h1 className="  text-sm font-bold text-[#797979]">Expired Tasks</h1>
-        <p className=" text-2xl font-bold">5</p>
+        <p className=" text-2xl font-bold">{expiredNumber}</p>
       </div>
       <div className="h-1/5  bg-contBackground rounded-xl shadow-md p-4 flex flex-col gap-2">
         <div className=" w-10 h-10 rounded-full flex justify-center items-center bg-[#E89271]">
           <BriefcaseBusiness color="white" size={"20px"} />
         </div>
         <h1 className="  text-sm font-bold text-[#797979]">All Active Tasks</h1>
-        <p className=" text-2xl font-bold">5</p>
+        <p className=" text-2xl font-bold">{activeNumber}</p>
       </div>
       <div className="h-1/5  bg-contBackground rounded-xl shadow-md p-4 flex flex-col gap-2">
         <div className=" w-10 h-10 rounded-full flex justify-center items-center bg-[#70A1E5]">
           <Clock color="white" size={"20px"} />
         </div>
         <h1 className="  text-sm font-bold text-[#797979]">Completed Tasks</h1>
-        <p className=" text-2xl font-bold">5</p>
+        <p className=" text-2xl font-bold">{completedNumber}</p>
       </div>
       <Dialog>
         <DialogTrigger>
